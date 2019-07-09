@@ -25,4 +25,4 @@ pipelines:
             - wget https://releases.hashicorp.com/terraform/0.12.3/terraform_0.12.3_linux_amd64.zip  
             - unzip terraform_0.12.3_linux_amd64.zip
             - mv terraform /usr/local/bin/
-            - terraform init -backend-config="conn_str=$DATABASE_URL"
+            - terraform init -backend-config="conn_str=$DATABASE_URL" < 1
