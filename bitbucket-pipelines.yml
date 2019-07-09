@@ -17,6 +17,6 @@ pipelines:
               -H "Authorization:Bearer $HEROKU_API_KEY"
               -H "Accept:application/vnd.heroku+json; version=3"
               | jq -r '.DATABASE_URL')
-            - docker run -i -t hashicorp/terraform:light 
+            - docker run hashicorp/terraform:light 
               init 
               -backend-config="conn_str=$DATABASE_URL"
