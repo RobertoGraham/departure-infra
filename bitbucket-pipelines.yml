@@ -17,4 +17,4 @@ pipelines:
               -H "Authorization:Bearer $HEROKU_API_KEY"
               -H "Accept:application/vnd.heroku+json; version=3"
               | jq -r '.DATABASE_URL')
-            # - export DATABASE_URL=`heroku config:get DATABASE_URL --app bus-api-terraform-backend`
+            - echo $DATABASE_URL
