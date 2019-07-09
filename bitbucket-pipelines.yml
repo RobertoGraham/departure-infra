@@ -12,12 +12,6 @@ pipelines:
           caches:
             - docker
           script:
-            - apt-get update 
-              && apt-get install 
-              -y 
-              jq 
-              unzip 
-              wget
             - export DATABASE_URL=$(curl --silent --show-error --fail https://api.heroku.com/apps/bus-api-terraform-backend/config-vars
               -H "Authorization:Bearer $HEROKU_API_KEY"
               -H "Accept:application/vnd.heroku+json; version=3"
@@ -25,4 +19,4 @@ pipelines:
             - wget https://releases.hashicorp.com/terraform/0.12.3/terraform_0.12.3_linux_amd64.zip  
             - unzip terraform_0.12.3_linux_amd64.zip
             - mv terraform /usr/local/bin/
-            - 1 | terraform init -backend-config="conn_str=$DATABASE_URL"
+            - "1" | terraform init -backend-config="conn_str=$DATABASE_URL"
