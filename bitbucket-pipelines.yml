@@ -12,6 +12,7 @@ pipelines:
           caches:
             - docker
           script:
+            - apt-get update && apt-get install -y jq
             - curl https://api.heroku.com/apps/bus-api-terraform-backend/config-vars
               -H "Authorization:Bearer $HEROKU_API_KEY"
               -H "Accept:application/vnd.heroku+json; version=3"
