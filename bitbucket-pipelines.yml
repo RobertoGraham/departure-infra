@@ -1,0 +1,18 @@
+image: atlassian/default-image:2
+
+pipelines:
+  custom:
+    release:
+      - variables:
+          - name: BUS_API_CLIENT_BUILD_NUMBER
+          - name: BUS_API_SERVER_BUILD_NUMBER
+      - step:
+          services:
+            - docker
+          caches:
+            - docker
+          script:
+            - curl https://api.heroku.com/apps/bus-api-terraform-backend/config-vars
+              -H "Accept: application/vnd.heroku+json; version=3"
+              -H "Authorization: Bearer $HEROKU_API_KEY"
+            # - export DATABASE_URL=`heroku config:get DATABASE_URL --app bus-api-terraform-backend`
