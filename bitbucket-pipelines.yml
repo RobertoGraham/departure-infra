@@ -17,3 +17,11 @@ pipelines:
               -H "Accept:application/vnd.heroku+json; version=3"
               | jq -r '.DATABASE_URL')
             - echo 1 | docker run -i -v $(pwd):/data -w /data hashicorp/terraform:light init -backend-config="conn_str=$DATABASE_URL"
+            - docker run -v $(pwd):/data -w /data hashicorp/terraform:light plan 
+              -var client_app_name=prod-bus-api-client 
+              -var server_app_name=prod-bus-api-server 
+              -var transport_api_app_id=$TRANSPORT_API_APP_ID 
+              -var transport_api_app_key=$TRANSPORT_API_APP_KEY 
+              -var client_build_number=$BUS_API_CLIENT_BUILD_NUMBER 
+              -var server_build_number=$BUS_API_SERVER_BUILD_NUMBER  
+              -out=current.tfplan
