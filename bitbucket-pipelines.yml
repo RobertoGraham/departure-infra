@@ -12,10 +12,22 @@ pipelines:
           caches:
             - docker
           script:
+            - curl --silent 
+              --show-error 
+              --fail 
+              --location 
+              --output bus_api_client-$BUS_API_CLIENT_BUILD_NUMBER.tar.gz
+              https://bitbucket.org/robertograham/bus-api-client/get/$BUS_API_CLIENT_BUILD_NUMBER.tar.gz
+            - curl --silent 
+              --show-error 
+              --fail 
+              --location 
+              --output bus_api_server-$BUS_API_SERVER_BUILD_NUMBER.tar.gz
+              https://bitbucket.org/robertograham/bus-api/get/$BUS_API_SERVER_BUILD_NUMBER.tar.gz
             - export DATABASE_URL=$(curl --silent --show-error --fail https://api.heroku.com/apps/bus-api-terraform-backend/config-vars
               -H "Authorization:Bearer $HEROKU_API_KEY"
               -H "Accept:application/vnd.heroku+json; version=3"
-              | jq -r '.DATABASE_URL')
+              | jq -r '.DATABASE_URL')  
             - echo 1 | docker run -i -v $(pwd):/data -w /data hashicorp/terraform:light init -backend-config="conn_str=$DATABASE_URL"
             - docker run 
               -v $(pwd):/data

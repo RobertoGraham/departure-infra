@@ -53,16 +53,16 @@ resource "heroku_app" "bus-api-server" {
 resource "heroku_build" "bus-api-client" {
   app = heroku_app.bus-api-client.name
   source = {
-    url     = "https://bitbucket.org/robertograham/bus-api-client/get/${var.client_build_number}.tar.gz"
     version = var.client_build_number
+    path = "./bus_api_client-${var.client_build_number}.tar.gz"
   }
 }
 
 resource "heroku_build" "bus-api-server" {
   app = heroku_app.bus-api-server.name
   source = {
-    url     = "https://bitbucket.org/robertograham/bus-api/get/${var.server_build_number}.tar.gz"
     version = var.server_build_number
+    path = "./bus_api_server-${var.server_build_number}.tar.gz"
   }
 }
 
