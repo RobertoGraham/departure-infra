@@ -18,7 +18,7 @@ pipelines:
               | jq -r '.DATABASE_URL')
             - echo 1 | docker run -i -v $(pwd):/data -w /data hashicorp/terraform:light init -backend-config="conn_str=$DATABASE_URL"
             - docker run 
-              -v $(pwd):/data 
+              -v $(pwd):/data
               -w /data
               -e TF_VAR_transport_api_app_id=$TRANSPORT_API_APP_ID
               -e TF_VAR_transport_api_app_key=$TRANSPORT_API_APP_KEY
