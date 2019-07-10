@@ -36,7 +36,6 @@ pipelines:
               -e HEROKU_API_KEY=$HEROKU_API_KEY
               -e HEROKU_EMAIL=$HEROKU_EMAIL
               hashicorp/terraform:light init -backend-config="conn_str=$DATABASE_URL"
-            - ls -l
             - docker run 
               -v $(pwd):/data
               -w /data
@@ -50,4 +49,9 @@ pipelines:
               -var client_app_name=prod-bus-api-client 
               -var server_app_name=prod-bus-api-server
               -out=current.tfplan
-            - terraform apply current.tfplan
+            - docker run 
+              -v $(pwd):/data
+              -w /data
+              -e HEROKU_API_KEY=$HEROKU_API_KEY
+              -e HEROKU_EMAIL=$HEROKU_EMAIL
+              hashicorp/terraform:light apply current.tfplan
