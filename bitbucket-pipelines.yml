@@ -3,31 +3,36 @@ image: atlassian/default-image:2
 pipelines:
   custom:
     release:
-      - variables:
-          - name: BUS_API_CLIENT_BUILD_NUMBER
-          - name: BUS_API_SERVER_BUILD_NUMBER
       - step:
           services:
             - docker
           caches:
             - docker
           script:
-            - curl --silent 
+            - export CONFIG_VARS_JSON=$(curl --silent 
               --show-error 
               --fail 
-              --location 
-              --output bus_api_client-$BUS_API_CLIENT_BUILD_NUMBER.tar.gz
-              https://bitbucket.org/robertograham/bus-api-client/get/$BUS_API_CLIENT_BUILD_NUMBER.tar.gz
-            - curl --silent 
-              --show-error 
-              --fail 
-              --location 
-              --output bus_api_server-$BUS_API_SERVER_BUILD_NUMBER.tar.gz
-              https://bitbucket.org/robertograham/bus-api/get/$BUS_API_SERVER_BUILD_NUMBER.tar.gz
-            - export DATABASE_URL=$(curl --silent --show-error --fail https://api.heroku.com/apps/bus-api-terraform-backend/config-vars
-              -H "Authorization:Bearer $HEROKU_API_KEY"
-              -H "Accept:application/vnd.heroku+json; version=3"
+              https://api.heroku.com/apps/bus-api-terraform-backend/config-vars
+              --header "Authorization:Bearer $HEROKU_API_KEY"
+              --header "Accept:application/vnd.heroku+json; version=3")
+            - export DATABASE_URL=$(echo CONFIG_VARS_JSON
               | jq -r '.DATABASE_URL')  
+            - export BUS_API_CLIENT_COMMIT=$(echo CONFIG_VARS_JSON
+              | jq -r '.BUS_API_CLIENT_COMMIT')
+            - export BUS_API_SERVER_COMMIT=$(echo CONFIG_VARS_JSON
+              | jq -r '.BUS_API_SERVER_COMMIT')              
+            - curl --silent 
+              --show-error 
+              --fail 
+              --location 
+              --output bus_api_client-$BUS_API_CLIENT_COMMIT.tar.gz
+              https://bitbucket.org/robertograham/bus-api-client/get/$BUS_API_CLIENT_COMMIT.tar.gz
+            - curl --silent 
+              --show-error 
+              --fail 
+              --location 
+              --output bus_api_server-$BUS_API_SERVER_COMMIT.tar.gz
+              https://bitbucket.org/robertograham/bus-api/get/$BUS_API_SERVER_COMMIT.tar.gz  
             - echo 1 
               | docker run 
               -i 
@@ -41,8 +46,8 @@ pipelines:
               -w /data
               -e TF_VAR_transport_api_app_id=$TRANSPORT_API_APP_ID
               -e TF_VAR_transport_api_app_key=$TRANSPORT_API_APP_KEY
-              -e TF_VAR_client_build_number=$BUS_API_CLIENT_BUILD_NUMBER 
-              -e TF_VAR_server_build_number=$BUS_API_SERVER_BUILD_NUMBER
+              -e TF_VAR_client_commit=$BUS_API_CLIENT_COMMIT 
+              -e TF_VAR_server_commit=$BUS_API_SERVER_COMMIT
               -e HEROKU_API_KEY=$HEROKU_API_KEY
               -e HEROKU_EMAIL=$HEROKU_EMAIL
               hashicorp/terraform:light plan 

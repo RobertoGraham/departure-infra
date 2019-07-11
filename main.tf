@@ -23,12 +23,12 @@ variable "transport_api_app_key" {
   description = "Transport API Application Key"
 }
 
-variable "client_build_number" {
-  description = "Build number of bus-api-client to deploy"
+variable "client_commit" {
+  description = "Commit ref of bus-api-client to deploy"
 }
 
-variable "server_build_number" {
-  description = "Build number of bus-api-server to deploy"
+variable "server_commit" {
+  description = "Commit ref of bus-api-server to deploy"
 }
 
 resource "heroku_app" "bus-api-client" {
@@ -53,16 +53,16 @@ resource "heroku_app" "bus-api-server" {
 resource "heroku_build" "bus-api-client" {
   app = heroku_app.bus-api-client.name
   source = {
-    version = var.client_build_number
-    path = "./bus_api_client-${var.client_build_number}.tar.gz"
+    version = var.client_commit
+    path = "./bus_api_client-${var.client_commit}.tar.gz"
   }
 }
 
 resource "heroku_build" "bus-api-server" {
   app = heroku_app.bus-api-server.name
   source = {
-    version = var.server_build_number
-    path = "./bus_api_server-${var.server_build_number}.tar.gz"
+    version = var.server_commit
+    path = "./bus_api_server-${var.server_commit}.tar.gz"
   }
 }
 
