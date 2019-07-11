@@ -13,6 +13,7 @@ pipelines:
             - export BUS_API_CLIENT_COMMIT=$(echo $CONFIG_VARS_JSON | jq -r '.BUS_API_CLIENT_COMMIT')
             - export BUS_API_SERVER_COMMIT=$(echo $CONFIG_VARS_JSON | jq -r '.BUS_API_SERVER_COMMIT')
             - curl -sSfLo bus_api_client-$BUS_API_CLIENT_COMMIT.tar.gz
+              -u $BITBUCKET_REPO_OWNER:$BITBUCKET_PASSWORD
               https://bitbucket.org/robertograham/bus-api-client/get/$BUS_API_CLIENT_COMMIT.tar.gz
             - curl -sSfLo bus_api_server-$BUS_API_SERVER_COMMIT.tar.gz
               -u $BITBUCKET_REPO_OWNER:$BITBUCKET_PASSWORD
