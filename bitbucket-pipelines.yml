@@ -15,11 +15,11 @@ pipelines:
               https://api.heroku.com/apps/bus-api-terraform-backend/config-vars
               --header "Authorization:Bearer $HEROKU_API_KEY"
               --header "Accept:application/vnd.heroku+json; version=3")
-            - export DATABASE_URL=$(echo CONFIG_VARS_JSON
+            - export DATABASE_URL=$(echo $CONFIG_VARS_JSON
               | jq -r '.DATABASE_URL')  
-            - export BUS_API_CLIENT_COMMIT=$(echo CONFIG_VARS_JSON
+            - export BUS_API_CLIENT_COMMIT=$(echo $CONFIG_VARS_JSON
               | jq -r '.BUS_API_CLIENT_COMMIT')
-            - export BUS_API_SERVER_COMMIT=$(echo CONFIG_VARS_JSON
+            - export BUS_API_SERVER_COMMIT=$(echo $CONFIG_VARS_JSON
               | jq -r '.BUS_API_SERVER_COMMIT')              
             - curl --silent 
               --show-error 
