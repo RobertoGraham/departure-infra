@@ -1,14 +1,11 @@
-image: atlassian/default-image:2
+image: alpine:3.9.4
 
 pipelines:
   custom:
     release:
       - step:
-          services:
-            - docker
-          caches:
-            - docker
           script:
+            - apk --no-cache add curl jq
             - export CONFIG_VARS_JSON=$(curl --silent 
               --show-error 
               --fail 
@@ -60,3 +57,7 @@ pipelines:
               -e HEROKU_API_KEY=$HEROKU_API_KEY
               -e HEROKU_EMAIL=$HEROKU_EMAIL
               hashicorp/terraform:light apply current.tfplan
+          services:
+            - docker
+          caches:
+            - docker
