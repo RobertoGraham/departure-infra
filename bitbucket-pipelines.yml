@@ -24,6 +24,7 @@ pipelines:
               -e HEROKU_API_KEY=$HEROKU_API_KEY
               -e HEROKU_EMAIL=$HEROKU_EMAIL
               hashicorp/terraform:light init -backend-config="conn_str=$DATABASE_URL"
+            - env  
             - docker run
               -v $(pwd):/data
               -w /data
