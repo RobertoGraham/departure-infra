@@ -9,7 +9,7 @@ pipelines:
               -H "Authorization:Bearer $HEROKU_API_KEY"
               -H "Accept:application/vnd.heroku+json; version=3"
               https://api.heroku.com/apps/bus-api-terraform-backend/config-vars
-              | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]"); 
+              | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]");
               do export $keyEqualsValueString; done
             - curl -sSfLo bus_api_client-$BUS_API_CLIENT_COMMIT.tar.gz
               -u $BITBUCKET_REPO_OWNER:$BITBUCKET_PASSWORD
@@ -24,7 +24,6 @@ pipelines:
               -e HEROKU_API_KEY=$HEROKU_API_KEY
               -e HEROKU_EMAIL=$HEROKU_EMAIL
               hashicorp/terraform:0.12.4 init -backend-config="conn_str=$DATABASE_URL"
-            - env  
             - docker run
               -v $(pwd):/data
               -w /data
