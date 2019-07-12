@@ -23,27 +23,27 @@ pipelines:
               -w /data
               -e HEROKU_API_KEY=$HEROKU_API_KEY
               -e HEROKU_EMAIL=$HEROKU_EMAIL
-              hashicorp/terraform:light init -backend-config="conn_str=$DATABASE_URL"
+              hashicorp/terraform:0.12.4 init -backend-config="conn_str=$DATABASE_URL"
             - env  
             - docker run
               -v $(pwd):/data
               -w /data
-              -e TF_VAR_transport_api_app_id=$TRANSPORT_API_APP_ID
-              -e TF_VAR_transport_api_app_key=$TRANSPORT_API_APP_KEY
-              -e TF_VAR_client_commit=$BUS_API_CLIENT_COMMIT
-              -e TF_VAR_server_commit=$BUS_API_SERVER_COMMIT
               -e HEROKU_API_KEY=$HEROKU_API_KEY
               -e HEROKU_EMAIL=$HEROKU_EMAIL
-              hashicorp/terraform:light plan
+              hashicorp/terraform:0.12.4 plan
               -var client_app_name=prod-bus-api-client
               -var server_app_name=prod-bus-api-server
+              -var transport_api_app_id=$TRANSPORT_API_APP_ID
+              -var transport_api_app_key=$TRANSPORT_API_APP_KEY
+              -var client_commit=$BUS_API_CLIENT_COMMIT
+              -var server_commit=$BUS_API_SERVER_COMMIT
               -out=current.tfplan
             - docker run
               -v $(pwd):/data
               -w /data
               -e HEROKU_API_KEY=$HEROKU_API_KEY
               -e HEROKU_EMAIL=$HEROKU_EMAIL
-              hashicorp/terraform:light apply current.tfplan
+              hashicorp/terraform:0.12.4 apply current.tfplan
           services:
             - docker
           caches:
