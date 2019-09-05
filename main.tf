@@ -1,5 +1,5 @@
 provider "heroku" {
-  version = "~> 2.0.3"
+  version = "~> 2.1.2"
 }
 
 terraform {
@@ -70,7 +70,7 @@ resource "heroku_formation" "bus-api-server" {
   app        = heroku_app.bus-api-server.name
   type       = "web"
   quantity   = 1
-  size       = "hobby"
+  size       = "free"
   depends_on = [heroku_build.bus-api-server]
 }
 
