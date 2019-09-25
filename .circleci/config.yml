@@ -1,16 +1,14 @@
 version: 2.0
 jobs:
   build:
-    docker:
-      - image: docker:18.09.3
+    machine:
+      - image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-          version: 18.09.3
       - run:
           command: |
-            apk --no-cache add curl jq
+            apt-get update
+            apt-get install -y --no-install-recommends curl jq
             for keyEqualsValueString in $(curl -sSf \
             -H "Authorization:Bearer $HEROKU_API_KEY" \
             -H "Accept:application/vnd.heroku+json; version=3" \
@@ -49,7 +47,6 @@ jobs:
             -e HEROKU_API_KEY=$HEROKU_API_KEY \
             -e HEROKU_EMAIL=$HEROKU_EMAIL \
             hashicorp/terraform:0.12.9 apply current.tfplan
-
 workflows:
   version: 2
   approval-and-build:
