@@ -21,6 +21,8 @@ jobs:
             https://github.com/RobertoGraham/departure-app/archive/$BUS_API_CLIENT_COMMIT.tar.gz
             curl -sSfLo bus_api_server-$BUS_API_SERVER_COMMIT.tar.gz \
             https://github.com/RobertoGraham/departure-api/archive/$BUS_API_SERVER_COMMIT.tar.gz
+            pwd
+            ls
             echo 1 | docker run \
             -i \
             -v $(pwd):/data \
