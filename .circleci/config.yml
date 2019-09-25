@@ -1,9 +1,6 @@
 version: 2.0
 jobs:
   build:
-    branches:
-      ignore:
-        - /.*/
     docker:
       - image: alpine:3.10.2
     steps:
@@ -50,3 +47,20 @@ jobs:
             -e HEROKU_EMAIL=$HEROKU_EMAIL \
             hashicorp/terraform:0.12.9 apply current.tfplan
 
+workflows:
+  version: 2
+  approval-and-build:
+    jobs:
+      - hold:
+          filters:
+            branches:
+              only:
+                - master
+          type: approval
+      - build
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - hold
