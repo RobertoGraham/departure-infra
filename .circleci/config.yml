@@ -2,11 +2,12 @@ version: 2.0
 jobs:
   build:
     docker:
-      - image: alpine:3.10.2
+      - image: docker:18.09.3
     steps:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+          version: 18.09.3
       - run:
           command: |
             apk --no-cache add curl jq
