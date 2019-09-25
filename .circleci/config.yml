@@ -54,13 +54,8 @@ workflows:
       - hold:
           filters:
             branches:
-              only:
-                - master
+              only: master
           type: approval
       - build
-          filters:
-            branches:
-              only:
-                - master
           requires:
             - hold
