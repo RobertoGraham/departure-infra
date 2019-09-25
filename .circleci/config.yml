@@ -7,8 +7,8 @@ jobs:
       - checkout
       - run:
           command: |
-            apt-get update
-            apt-get install -y --no-install-recommends curl jq
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends curl jq
             for keyEqualsValueString in $(curl -sSf \
             -H "Authorization:Bearer $HEROKU_API_KEY" \
             -H "Accept:application/vnd.heroku+json; version=3" \
