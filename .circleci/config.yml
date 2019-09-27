@@ -12,13 +12,13 @@ jobs:
             for keyEqualsValueString in $(curl -sSf \
             -H "Authorization:Bearer $HEROKU_API_KEY" \
             -H "Accept:application/vnd.heroku+json; version=3" \
-            https://api.heroku.com/apps/bus-api-terraform-backend/config-vars \
+            https://api.heroku.com/apps/departure-infra-backend/config-vars \
             | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]"); \
             do export $keyEqualsValueString; done
-            curl -sSfLo bus_api_client-$BUS_API_CLIENT_COMMIT.tar.gz \
-            https://github.com/RobertoGraham/departure-app/archive/$BUS_API_CLIENT_COMMIT.tar.gz
-            curl -sSfLo bus_api_server-$BUS_API_SERVER_COMMIT.tar.gz \
-            https://github.com/RobertoGraham/departure-api/archive/$BUS_API_SERVER_COMMIT.tar.gz
+            curl -sSfLo departure-app-$DEPARTURE_APP_COMMIT_HASH.tar.gz \
+            https://github.com/RobertoGraham/departure-app/archive/$DEPARTURE_APP_COMMIT_HASH.tar.gz
+            curl -sSfLo departure-api-$DEPARTURE_API_COMMIT_HASH.tar.gz \
+            https://github.com/RobertoGraham/departure-api/archive/$DEPARTURE_API_COMMIT_HASH.tar.gz
             pwd
             ls
             echo 1 | docker run \
@@ -34,12 +34,12 @@ jobs:
             -e HEROKU_API_KEY=$HEROKU_API_KEY \
             -e HEROKU_EMAIL=$HEROKU_EMAIL \
             hashicorp/terraform:0.12.9 plan \
-            -var client_app_name=prod-bus-api-client \
-            -var server_app_name=prod-bus-api-server \
+            -var departure_app_name=prod-departure-app \
+            -var departure_api_name=prod-departure-api \
             -var transport_api_app_id=$TRANSPORT_API_APP_ID \
             -var transport_api_app_key=$TRANSPORT_API_APP_KEY \
-            -var client_commit=$BUS_API_CLIENT_COMMIT \
-            -var server_commit=$BUS_API_SERVER_COMMIT \
+            -var departure_app_commit_hash=$DEPARTURE_APP_COMMIT_HASH \
+            -var departure_api_commit_hash=$DEPARTURE_API_COMMIT_HASH \
             -out=current.tfplan
             docker run \
             -v $(pwd):/data \

@@ -7,12 +7,12 @@ terraform {
   }
 }
 
-variable "client_app_name" {
-  description = "Name of the Heroku app provisioned for bus-api-client"
+variable "departure_app_name" {
+  description = "Name of the Heroku app provisioned for departure-app"
 }
 
-variable "server_app_name" {
-  description = "Name of the Heroku app provisioned for bus-api-server"
+variable "departure_api_name" {
+  description = "Name of the Heroku app provisioned for departure-api"
 }
 
 variable "transport_api_app_id" {
@@ -23,25 +23,25 @@ variable "transport_api_app_key" {
   description = "Transport API Application Key"
 }
 
-variable "client_commit" {
-  description = "Commit ref of bus-api-client to deploy"
+variable "departure_app_commit_hash" {
+  description = "Commit ref of departure-app to deploy"
 }
 
-variable "server_commit" {
-  description = "Commit ref of bus-api-server to deploy"
+variable "departure_api_commit_hash" {
+  description = "Commit ref of departure-api to deploy"
 }
 
-resource "heroku_app" "bus-api-client" {
-  name   = var.client_app_name
+resource "heroku_app" "departure-app" {
+  name   = var.departure_app_name
   region = "eu"
   stack  = "container"
   config_vars = {
-    BUS_API_URL = "https://${var.server_app_name}.herokuapp.com"
+    DEPARTURE_API_URL = "https://${var.departure_api_name}.herokuapp.com"
   }
 }
 
-resource "heroku_app" "bus-api-server" {
-  name   = var.server_app_name
+resource "heroku_app" "departure-api" {
+  name   = var.departure_api_name
   region = "eu"
   stack  = "container"
   sensitive_config_vars = {
@@ -50,41 +50,41 @@ resource "heroku_app" "bus-api-server" {
   }
 }
 
-resource "heroku_build" "bus-api-client" {
-  app = heroku_app.bus-api-client.name
+resource "heroku_build" "departure-app" {
+  app = heroku_app.departure-app.name
   source = {
-    version = var.client_commit
-    path = "./bus_api_client-${var.client_commit}.tar.gz"
+    version = var.departure_app_commit_hash
+    path = "./departure-app-${var.departure_app_commit_hash}.tar.gz"
   }
 }
 
-resource "heroku_build" "bus-api-server" {
-  app = heroku_app.bus-api-server.name
+resource "heroku_build" "departure-api" {
+  app = heroku_app.departure-api.name
   source = {
-    version = var.server_commit
-    path = "./bus_api_server-${var.server_commit}.tar.gz"
+    version = var.departure_api_commit_hash
+    path = "./departure-app-${var.departure_api_commit_hash}.tar.gz"
   }
 }
 
-resource "heroku_formation" "bus-api-server" {
-  app        = heroku_app.bus-api-server.name
+resource "heroku_formation" "departure-api" {
+  app        = heroku_app.departure-api.name
   type       = "web"
   quantity   = 1
   size       = "free"
-  depends_on = [heroku_build.bus-api-server]
+  depends_on = [heroku_build.departure-api]
 }
 
-resource "heroku_formation" "bus-api-client" {
-  app      = heroku_app.bus-api-client.name
+resource "heroku_formation" "departure-app" {
+  app      = heroku_app.departure-app.name
   type     = "web"
   quantity = 1
   size     = "free"
   depends_on = [
-    heroku_build.bus-api-client,
-    heroku_formation.bus-api-server,
+    heroku_build.departure-app,
+    heroku_formation.departure-api,
   ]
 }
 
-output "client_app_url" {
-  value = "https://${heroku_app.bus-api-client.name}.herokuapp.com"
+output "departure_app_url" {
+  value = "https://${heroku_app.departure-app.name}.herokuapp.com"
 }
