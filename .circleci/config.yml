@@ -19,8 +19,6 @@ jobs:
             https://github.com/RobertoGraham/departure-app/archive/$DEPARTURE_APP_COMMIT_HASH.tar.gz
             curl -sSfLo departure-api-$DEPARTURE_API_COMMIT_HASH.tar.gz \
             https://github.com/RobertoGraham/departure-api/archive/$DEPARTURE_API_COMMIT_HASH.tar.gz
-            pwd
-            ls
             echo 1 | docker run \
             -i \
             -v $(pwd):/data \
