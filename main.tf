@@ -62,7 +62,7 @@ resource "heroku_build" "departure-api" {
   app = heroku_app.departure-api.name
   source = {
     version = var.departure_api_commit_hash
-    path = "./departure-app-${var.departure_api_commit_hash}.tar.gz"
+    path = "./departure-api-${var.departure_api_commit_hash}.tar.gz"
   }
 }
 
