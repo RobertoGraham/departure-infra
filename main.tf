@@ -1,5 +1,5 @@
 provider "heroku" {
-  version = "~> 2.2.0"
+  version = "~> 2.2.1"
 }
 
 terraform {
@@ -54,7 +54,7 @@ resource "heroku_build" "departure-app" {
   app = heroku_app.departure-app.name
   source = {
     version = var.departure_app_commit_hash
-    url = "https://github.com/RobertoGraham/departure-app/archive/${var.departure_app_commit_hash}.tar.gz"
+    url     = "https://github.com/RobertoGraham/departure-app/archive/${var.departure_app_commit_hash}.tar.gz"
   }
 }
 
@@ -62,7 +62,7 @@ resource "heroku_build" "departure-api" {
   app = heroku_app.departure-api.name
   source = {
     version = var.departure_api_commit_hash
-    path = "./departure-api-${var.departure_api_commit_hash}.tar.gz"
+    url     = "https://github.com/RobertoGraham/departure-api/archive/${var.departure_api_commit_hash}.tar.gz"
   }
 }
 
