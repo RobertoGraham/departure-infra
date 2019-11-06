@@ -15,17 +15,12 @@ jobs:
             | jq -r "to_entries|map(\"TF_VAR_\(.key|ascii_downcase)=\(.value|tostring)\")|.[]"); \
             do export $keyEqualsValueString; done
             echo 1 | terraform init -backend-config="conn_str=$TF_VAR_database_url"
-            terraform plan -out=current.tfplan
-            terraform apply current.tfplan
+            terraform apply -auto-approve
 workflows:
   version: 2
   approval-and-build:
     jobs:
-      - hold:
+      - build:
           filters:
             branches:
               only: master
-          type: approval
-      - build:
-          requires:
-            - hold
