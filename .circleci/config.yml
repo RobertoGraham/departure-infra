@@ -2,7 +2,7 @@ version: 2.0
 jobs:
   apply-terraform:
     docker:
-      - image: hashicorp/terraform:0.12.10
+      - image: hashicorp/terraform:0.12.13
     steps:
       - checkout
       - run:
