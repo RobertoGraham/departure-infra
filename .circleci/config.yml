@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 jobs:
   apply-terraform:
     docker:
@@ -17,7 +17,6 @@ jobs:
             echo 1 | terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url"
             terraform apply -input=false -auto-approve
 workflows:
-  version: 2
   apply-terraform:
     jobs:
       - apply-terraform:
