@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           command: |
-            apk add --no-cache curl jq
+            apk add -q --no-progress --no-cache curl jq
             for keyEqualsValueString in $(curl -sSf \
             -H "Authorization:Bearer $HEROKU_API_KEY" \
             -H "Accept:application/vnd.heroku+json; version=3" \
