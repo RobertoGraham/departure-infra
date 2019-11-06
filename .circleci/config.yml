@@ -14,8 +14,9 @@ jobs:
             https://api.heroku.com/apps/departure-infra-backend/config-vars \
             | jq -r "to_entries|map(\"TF_VAR_\(.key|ascii_downcase)=\(.value|tostring)\")|.[]"); \
             do export $keyEqualsValueString; done
-            echo 1 | terraform init -backend-config="conn_str=$TF_VAR_database_url"
-            terraform apply -auto-approve
+            terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url"
+            terraform plan -out=tfplan -input=false
+            terraform apply -input=false tfplan
 workflows:
   version: 2
   approval-and-build:
