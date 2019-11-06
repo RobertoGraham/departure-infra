@@ -1,6 +1,6 @@
 version: 2.0
 jobs:
-  build:
+  apply-terraform:
     docker:
       - image: hashicorp/terraform:0.12.10
     steps:
@@ -14,14 +14,13 @@ jobs:
             https://api.heroku.com/apps/departure-infra-backend/config-vars \
             | jq -r "to_entries|map(\"TF_VAR_\(.key|ascii_downcase)=\(.value|tostring)\")|.[]"); \
             do export $keyEqualsValueString; done
-            terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url"
-            terraform plan -out=tfplan -input=false
-            terraform apply -input=false tfplan
+            echo 1 | terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url"
+            terraform apply -input=false -auto-approve
 workflows:
   version: 2
-  approval-and-build:
+  apply-terraform:
     jobs:
-      - build:
+      - apply-terraform:
           filters:
             branches:
               only: master
