@@ -36,26 +36,26 @@ variable "departure_app_domain" {
 }
 
 resource "heroku_app" "departure-app" {
-  name = var.departure_app_name
+  name   = var.departure_app_name
   region = "eu"
-  stack = "container"
+  stack  = "container"
   config_vars = {
     DEPARTURE_API_URL = "https://${var.departure_api_name}.herokuapp.com"
   }
 }
 
 resource "heroku_domain" "departure-app" {
-  app = heroku_app.departure-app.name
+  app      = heroku_app.departure-app.name
   hostname = var.departure_app_domain
 }
 
 resource "heroku_app" "departure-api" {
-  name = var.departure_api_name
+  name   = var.departure_api_name
   region = "eu"
-  stack = "container"
+  stack  = "container"
   sensitive_config_vars = {
     TRANSPORT_API_CLIENT_APPLICATION_KEY = var.transport_api_app_key
-    TRANSPORT_API_CLIENT_APPLICATION_ID = var.transport_api_app_id
+    TRANSPORT_API_CLIENT_APPLICATION_ID  = var.transport_api_app_id
   }
 }
 
@@ -63,7 +63,7 @@ resource "heroku_build" "departure-app" {
   app = heroku_app.departure-app.name
   source = {
     version = var.departure_app_commit_hash
-    url = "https://github.com/RobertoGraham/departure-app/archive/${var.departure_app_commit_hash}.tar.gz"
+    url     = "https://github.com/RobertoGraham/departure-app/archive/${var.departure_app_commit_hash}.tar.gz"
   }
 }
 
@@ -71,24 +71,24 @@ resource "heroku_build" "departure-api" {
   app = heroku_app.departure-api.name
   source = {
     version = var.departure_api_commit_hash
-    url = "https://github.com/RobertoGraham/departure-api/archive/${var.departure_api_commit_hash}.tar.gz"
+    url     = "https://github.com/RobertoGraham/departure-api/archive/${var.departure_api_commit_hash}.tar.gz"
   }
 }
 
 resource "heroku_formation" "departure-api" {
-  app = heroku_app.departure-api.name
-  type = "web"
+  app      = heroku_app.departure-api.name
+  type     = "web"
   quantity = 1
-  size = "free"
+  size     = "free"
   depends_on = [
-    heroku_build.departure-api]
+  heroku_build.departure-api]
 }
 
 resource "heroku_formation" "departure-app" {
-  app = heroku_app.departure-app.name
-  type = "web"
+  app      = heroku_app.departure-app.name
+  type     = "web"
   quantity = 1
-  size = "free"
+  size     = "free"
   depends_on = [
     heroku_build.departure-app,
     heroku_formation.departure-api,
