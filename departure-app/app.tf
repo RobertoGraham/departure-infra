@@ -4,6 +4,6 @@ resource "heroku_app" "departure-app" {
   stack  = "container"
   acm    = true
   config_vars = {
-    DEPARTURE_API_URL = data.terraform_remote_state.departure_api.departure_api_url
+    DEPARTURE_API_URL = data.terraform_remote_state.departure_api.outputs.departure_api_url
   }
 }
