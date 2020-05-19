@@ -19,7 +19,7 @@ jobs:
 workflows:
   apply-departure-api-terraform:
     jobs:
-      - apply-terraform:
+      - apply-departure-api-terraform:
           filters:
             branches:
               only: master
