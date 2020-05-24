@@ -21,4 +21,5 @@ module "application" {
   }
   commit_hash = var.departure_app_commit_hash
   acm = false
+  size = "hobby"
 }
