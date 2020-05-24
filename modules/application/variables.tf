@@ -32,6 +32,6 @@ variable "acm" {
 }
 
 variable "size" {
-  type    = "string"
+  type    = string
   default = "free"
 }

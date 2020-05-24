@@ -20,6 +20,6 @@ module "application" {
     DEPARTURE_API_URL = trimsuffix(data.heroku_app.departure-api.web_url, "/")
   }
   commit_hash = var.departure_app_commit_hash
-  acm = false
+  acm = true
   size = "hobby"
 }
