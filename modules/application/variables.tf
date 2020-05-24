@@ -1,21 +1,21 @@
-variable "application_name" {
+variable "name" {
   type        = string
   description = "Subdomain of herokuapp.com"
 }
 
-variable "custom_domain" {
+variable "hostname" {
   type        = string
   default     = null
   description = "Domain to accept traffic from"
 }
 
-variable "configuration_variables" {
+variable "config_vars" {
   type        = map(string)
   default     = null
   description = "Application environment variables"
 }
 
-variable "secret_configuration_variables" {
+variable "sensitive_config_vars" {
   type        = map(string)
   default     = null
   description = "Application secret environment variables"
@@ -24,4 +24,14 @@ variable "secret_configuration_variables" {
 variable "commit_hash" {
   type        = string
   description = "Commit hash of the change to deploy"
+}
+
+variable "acm" {
+  type    = bool
+  default = false
+}
+
+variable "size" {
+  type    = "string"
+  default = "free"
 }

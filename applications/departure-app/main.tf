@@ -13,11 +13,12 @@ data "heroku_app" "departure-api" {
 }
 
 module "application" {
-  source           = "../../modules/application"
-  application_name = "departure-app"
-  custom_domain    = var.departure_app_domain
-  configuration_variables = {
+  source   = "../../modules/application"
+  name     = "departure-app"
+  hostname = var.departure_app_domain
+  config_vars = {
     DEPARTURE_API_URL = trimsuffix(data.heroku_app.departure-api.web_url, "/")
   }
   commit_hash = var.departure_app_commit_hash
+  acm = false
 }
