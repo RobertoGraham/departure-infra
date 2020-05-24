@@ -16,6 +16,7 @@ resource "heroku_build" "application" {
 }
 
 resource "heroku_domain" "application" {
+  count    = var.custom_domain != null ? 1 : 0
   app      = heroku_app.application.name
   hostname = var.custom_domain
 }
