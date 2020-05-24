@@ -22,7 +22,7 @@ module "application" {
   application_name = "departure-app"
   custom_domain    = var.departure_app_domain
   configuration_variables = {
-    DEPARTURE_API_URL = trimsuffix(data.terraform_remote_state.departure_api.outputs.departure_api_url, "/")
+    DEPARTURE_API_URL = trimsuffix(data.terraform_remote_state.departure_api.outputs.url, "/")
   }
   commit_hash = var.departure_app_commit_hash
 }
