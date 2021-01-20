@@ -1,3 +1,13 @@
+terraform {
+  required_providers {
+    heroku = {
+      source  = "heroku/heroku"
+      version = "~> 3.2.0"
+    }
+  }
+  required_version = ">= 0.13"
+}
+
 resource "heroku_app" "application" {
   name                  = var.name
   region                = "eu"
@@ -22,10 +32,9 @@ resource "heroku_domain" "application" {
 }
 
 resource "heroku_formation" "departure-app" {
-  app      = heroku_app.application.name
-  type     = "web"
-  quantity = 1
-  size     = var.size
-  depends_on = [
-  heroku_build.application]
+  app        = heroku_app.application.name
+  type       = "web"
+  quantity   = 1
+  size       = var.size
+  depends_on = [heroku_build.application]
 }

@@ -1,8 +1,11 @@
-provider "heroku" {
-  version = "~> 2.4.0"
-}
-
 terraform {
+  required_providers {
+    heroku = {
+      source  = "heroku/heroku"
+      version = "~> 3.2.0"
+    }
+  }
+  required_version = ">= 0.13"
   backend "pg" {
     schema_name = "departure_app_terraform_remote_state"
   }
@@ -20,6 +23,6 @@ module "application" {
     DEPARTURE_API_URL = trimsuffix(data.heroku_app.departure-api.web_url, "/")
   }
   commit_hash = var.departure_app_commit_hash
-  acm = true
-  size = "hobby"
+  acm         = true
+  size        = "hobby"
 }

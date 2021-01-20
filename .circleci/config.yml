@@ -22,7 +22,7 @@ commands:
 executors:
   terraform:
     docker:
-      - image: hashicorp/terraform:0.12.25
+      - image: hashicorp/terraform:0.13.6
 
 jobs:
   apply-departure-api-terraform:
