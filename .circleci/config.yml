@@ -16,8 +16,9 @@ commands:
             https://api.heroku.com/apps/departure-infra-backend/config-vars \
             | jq -r "to_entries|map(\"TF_VAR_\(.key|ascii_downcase)=\(.value|tostring)\")|.[]"); \
             do export $keyEqualsValueString; done
-            terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url" applications/<< parameters.application >>
-            terraform apply -input=false -auto-approve applications/<< parameters.application >>
+            cd applications/<< parameters.application >>
+            terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url"
+            terraform apply -input=false -auto-approve
 
 executors:
   terraform:
