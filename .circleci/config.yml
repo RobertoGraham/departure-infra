@@ -4,6 +4,7 @@ parameters:
   application:
     type: enum
     enum: [ "departure-api", "departure-app" ]
+    default:
   departure-api-commit-hash:
     type: string
     default: eafa3ca4835176b8a6a451666a4cc4bb09b1e514
