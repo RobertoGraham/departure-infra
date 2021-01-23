@@ -10,7 +10,7 @@ variable "transport_api_app_key" {
   sensitive   = true
 }
 
-variable "departure_api_commit_hash" {
+variable "commit_hash" {
   type        = string
   description = "Commit hash of the departure-api change to deploy"
 }

@@ -18,5 +18,5 @@ module "application" {
     TRANSPORT_API_CLIENT_APPLICATION_KEY = var.transport_api_app_key
     TRANSPORT_API_CLIENT_APPLICATION_ID  = var.transport_api_app_id
   }
-  commit_hash = var.departure_api_commit_hash
+  commit_hash = var.commit_hash
 }

@@ -1,4 +1,16 @@
 version: 2.1
+
+parameters:
+  application:
+    type: enum
+    enum: [ "departure-api", "departure-app" ]
+  departure-api-commit-hash:
+    type: string
+    default: eafa3ca4835176b8a6a451666a4cc4bb09b1e514
+  departure-app-commit-hash:
+    type: string
+    default: 10b3172b4b624ab3eaab474b7ecdec0773c915b9
+
 jobs:
   apply-terraform:
     docker:
@@ -7,27 +19,44 @@ jobs:
       application:
         type: enum
         enum: [ "departure-api", "departure-app" ]
+      commit-hash:
+        type: string
     steps:
       - checkout
-      - run: |
-          apk add -q --no-progress --no-cache curl jq
-          for keyEqualsValueString in $(curl -sSf \
-          -H "Authorization:Bearer $HEROKU_API_KEY" \
-          -H "Accept:application/vnd.heroku+json; version=3" \
-          https://api.heroku.com/apps/departure-infra-backend/config-vars \
-          | jq -r "to_entries|map(\"TF_VAR_\(.key|ascii_downcase)=\(.value|tostring)\")|.[]"); \
-          do export $keyEqualsValueString; done
-          cd applications/<< parameters.application >>
-          terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url"
-          terraform apply -input=false -auto-approve
+      - run:
+          command: |
+            apk add -q --no-progress --no-cache curl jq
+            for keyEqualsValueString in $(curl -sSf \
+            -H "Authorization:Bearer $HEROKU_API_KEY" \
+            -H "Accept:application/vnd.heroku+json; version=3" \
+            https://api.heroku.com/apps/departure-infra-backend/config-vars \
+            | jq -r "to_entries|map(\"TF_VAR_\(.key|ascii_downcase)=\(.value|tostring)\")|.[]"); \
+            do export $keyEqualsValueString; done
+            cd applications/<< parameters.application >>
+            terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url"
+            terraform apply -input=false -auto-approve -var="commit_hash=<< parameters.commit-hash >>"
 
 workflows:
-  apply-terraform:
+  apply-departure-api-terraform:
+    when:
+      and:
+        - equal: [ departure-api, << pipeline.parameters.application >> ]
+        - << pipeline.parameters.departure-api-commit-hash >>
     jobs:
       - apply-terraform:
-          matrix:
-            parameters:
-              application: [ "departure-api", "departure-app" ]
+          commit-hash: << pipeline.parameters.departure-api-commit-hash >>
+          filters:
+            branches:
+              only: master
+  apply-departure-app-terraform:
+    when:
+      and:
+        - equal: [ departure-app, << pipeline.parameters.application >> ]
+        - << pipeline.parameters.departure-app-commit-hash >>
+    jobs:
+      - apply-terraform:
+          commit-hash: << pipeline.parameters.departure-app-commit-hash >>
+          application: << pipeline.parameters.application >>
           filters:
             branches:
               only: master

@@ -4,7 +4,7 @@ variable "departure_app_domain" {
   sensitive   = true
 }
 
-variable "departure_app_commit_hash" {
+variable "commit_hash" {
   type        = string
   description = "Commit hash of the departure-app change to deploy"
 }
