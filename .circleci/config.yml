@@ -1,52 +1,33 @@
 version: 2.1
-commands:
-  apply-application-terraform:
+jobs:
+  apply-terraform:
+    docker:
+      - image: hashicorp/terraform:0.14.4
     parameters:
       application:
         type: enum
-        enum: ["departure-api", "departure-app"]
+        enum: [ "departure-api", "departure-app" ]
     steps:
       - checkout
-      - run:
-          command: |
-            apk add -q --no-progress --no-cache curl jq
-            for keyEqualsValueString in $(curl -sSf \
-            -H "Authorization:Bearer $HEROKU_API_KEY" \
-            -H "Accept:application/vnd.heroku+json; version=3" \
-            https://api.heroku.com/apps/departure-infra-backend/config-vars \
-            | jq -r "to_entries|map(\"TF_VAR_\(.key|ascii_downcase)=\(.value|tostring)\")|.[]"); \
-            do export $keyEqualsValueString; done
-            cd applications/<< parameters.application >>
-            terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url"
-            terraform apply -input=false -auto-approve
-
-executors:
-  terraform:
-    docker:
-      - image: hashicorp/terraform:0.14.4
-
-jobs:
-  apply-departure-api-terraform:
-    executor: terraform
-    steps:
-      - apply-application-terraform:
-          application: "departure-api"
-  apply-departure-app-terraform:
-    executor: terraform
-    steps:
-      - apply-application-terraform:
-          application: "departure-app"
+      - run: |
+          apk add -q --no-progress --no-cache curl jq
+          for keyEqualsValueString in $(curl -sSf \
+          -H "Authorization:Bearer $HEROKU_API_KEY" \
+          -H "Accept:application/vnd.heroku+json; version=3" \
+          https://api.heroku.com/apps/departure-infra-backend/config-vars \
+          | jq -r "to_entries|map(\"TF_VAR_\(.key|ascii_downcase)=\(.value|tostring)\")|.[]"); \
+          do export $keyEqualsValueString; done
+          cd applications/<< parameters.application >>
+          terraform init -input=false -backend-config="conn_str=$TF_VAR_database_url"
+          terraform apply -input=false -auto-approve
 
 workflows:
-  apply-departure-api-terraform:
+  apply-terraform:
     jobs:
-      - apply-departure-api-terraform:
-          filters:
-            branches:
-              only: master
-  apply-departure-app-terraform:
-    jobs:
-      - apply-departure-app-terraform:
+      - apply-terraform:
+          matrix:
+            parameters:
+              application: [ "departure-api", "departure-app" ]
           filters:
             branches:
               only: master
