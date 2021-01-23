@@ -45,6 +45,7 @@ workflows:
     jobs:
       - apply-terraform:
           commit-hash: << pipeline.parameters.departure-api-commit-hash >>
+          application: << pipeline.parameters.application >>
           filters:
             branches:
               only: master
