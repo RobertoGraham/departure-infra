@@ -4,12 +4,9 @@ parameters:
   application:
     type: string
     default: ""
-  departure-api-commit-hash:
+  commit-hash:
     type: string
-    default: eafa3ca4835176b8a6a451666a4cc4bb09b1e514
-  departure-app-commit-hash:
-    type: string
-    default: 10b3172b4b624ab3eaab474b7ecdec0773c915b9
+    default: ""
 
 jobs:
   apply-terraform:
@@ -41,11 +38,11 @@ workflows:
     when:
       and:
         - equal: [ departure-api, << pipeline.parameters.application >> ]
-        - << pipeline.parameters.departure-api-commit-hash >>
+        - << pipeline.parameters.commit-hash >>
     jobs:
       - apply-terraform:
-          commit-hash: << pipeline.parameters.departure-api-commit-hash >>
-          application: << pipeline.parameters.application >>
+          commit-hash: << pipeline.parameters.commit-hash >>
+          application: departure-api
           filters:
             branches:
               only: master
@@ -53,11 +50,11 @@ workflows:
     when:
       and:
         - equal: [ departure-app, << pipeline.parameters.application >> ]
-        - << pipeline.parameters.departure-app-commit-hash >>
+        - << pipeline.parameters.commit-hash >>
     jobs:
       - apply-terraform:
-          commit-hash: << pipeline.parameters.departure-app-commit-hash >>
-          application: << pipeline.parameters.application >>
+          commit-hash: << pipeline.parameters.commit-hash >>
+          application: departure-app
           filters:
             branches:
               only: master
