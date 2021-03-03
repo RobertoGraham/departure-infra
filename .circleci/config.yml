@@ -45,7 +45,9 @@ jobs:
     steps:
       - initialise-terraform:
           application: << parameters.application >>
-      - run: terraform apply -input=false -auto-approve -var="commit_hash=<< parameters.commit-hash >>"
+      - run: |
+          cd applications/<< parameters.application >>
+          terraform apply -input=false -auto-approve -var="commit_hash=<< parameters.commit-hash >>"
   plan-terraform:
     executor: terraform
     parameters:
@@ -56,7 +58,9 @@ jobs:
     steps:
       - initialise-terraform:
           application: << parameters.application >>
-      - run: terraform plan -input=false -var="commit_hash=<< parameters.commit-hash >>"
+      - run: |
+          cd applications/<< parameters.application >>
+          terraform plan -input=false -var="commit_hash=<< parameters.commit-hash >>"
 
 workflows:
   apply-terraform:
