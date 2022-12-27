@@ -8,7 +8,7 @@ commands:
     steps:
       - checkout
       - run: |
-          apk add -q --no-progress --no-cache curl jq
+          apk --update add -q --no-progress --no-cache curl curl-dev jq
           for keyEqualsValueString in $(curl -sSf \
           -H "Authorization:Bearer $HEROKU_API_KEY" \
           -H "Accept:application/vnd.heroku+json; version=3" \
