@@ -8,8 +8,8 @@ resource "heroku_app" "application" {
 }
 
 resource "heroku_build" "application" {
-  app = heroku_app.application.name
-  source = {
+  app_id = heroku_app.application.id
+  source {
     version = var.commit_hash
     url     = "https://github.com/RobertoGraham/${var.name}/archive/${var.commit_hash}.tar.gz"
   }
@@ -17,13 +17,13 @@ resource "heroku_build" "application" {
 
 resource "heroku_domain" "application" {
   count    = var.hostname != null ? 1 : 0
-  app      = heroku_app.application.name
+  app_id      = heroku_app.application.id
   hostname = var.hostname
-  depends_on = [heroku_formation.departure-app]
+  depends_on = [heroku_formation.application]
 }
 
-resource "heroku_formation" "departure-app" {
-  app        = heroku_app.application.name
+resource "heroku_formation" "application" {
+  app_id        = heroku_app.application.id
   type       = "web"
   quantity   = 1
   size       = var.size
