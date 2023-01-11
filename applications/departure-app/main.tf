@@ -11,12 +11,12 @@ data "heroku_app" "departure-api" {
 module "application" {
   source   = "../../modules/application"
   name     = "departure-app"
-  hostname = var.departure_app_domain
+#  hostname = var.departure_app_domain
   config_vars = {
     DEPARTURE_API_URL = trimsuffix(data.heroku_app.departure-api.web_url, "/")
   }
   commit_hash = var.commit_hash
-  acm         = true
+#  acm         = true
   size        = "basic"
   sensitive_config_vars = {
     REDIRECT_HOSTNAME = var.departure_app_domain
