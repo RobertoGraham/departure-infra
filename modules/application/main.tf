@@ -19,6 +19,7 @@ resource "heroku_domain" "application" {
   count    = var.hostname != null ? 1 : 0
   app      = heroku_app.application.name
   hostname = var.hostname
+  depends_on = [heroku_formation.departure-app]
 }
 
 resource "heroku_formation" "departure-app" {
