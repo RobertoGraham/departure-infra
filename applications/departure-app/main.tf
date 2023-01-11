@@ -17,6 +17,7 @@ module "application" {
   }
   commit_hash = var.commit_hash
   acm         = true
+  size        = "basic"
   sensitive_config_vars = {
     REDIRECT_HOSTNAME = var.departure_app_domain
   }
