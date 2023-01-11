@@ -16,7 +16,7 @@ commands:
           | jq -r "to_entries|map(\"\(.key)=\(.value|tostring)\")|.[]"); \
           do export $keyEqualsValueString; done
           cd applications/<< parameters.application >>
-          terraform init -input=false -backend-config="conn_str=$DATABASE_URL"
+          terraform init -input=false -backend-config="conn_str=$DATABASE_URL" -upgrade
 
 executors:
   terraform:
